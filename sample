@@ -1,0 +1,88 @@
+<?php
+    $query="select * from request_form";
+    $res=mysqli_query($con,$query);
+    while($fet=mysqli_fetch_array($res))
+    {
+    ?>
+        <tr id="<?php echo $fet['id'];?>"><td><?php echo $fet['hotel_name']; ?></td>
+    <td><?php echo $fet['country']; ?></td>
+    <td><?php echo $fet['state']; ?></td>
+    <td><?php echo $fet['area']; ?></td>
+    <td><?php echo $fet['contact_person'];?></td>
+    <td><?php echo $fet['contact_number']; ?></td>
+    <td><?php echo $fet['rating']; ?> &nbsp;Star</td>
+    <td><img style="height:100px;width:130px;" src="../upload/<?php echo $fet['image']; ?>"></td>
+    <td><?php echo $fet['username']; ?></td>
+    <td><?php echo $fet['approval']; ?></td>
+    <td><button class="btn btn-primary app">Approval</button></td>
+    <td><button class="btn btn-primary dis">Disapprove</button></td>
+    </tr>
+    <?php
+    }
+    ?>
+</table>
+    
+    </div>
+    </div>
+    <script>
+     $('.app').click(function(){
+  var aa=$(this).parents("tr").attr("id");
+         $.ajax({
+             url:'hotel.php',
+             type:'GET',
+             data:{id:aa,Status:'Approved'},
+             error:function(){
+                 alert('Something went wrong');
+             },
+             success:function(){
+                 alert('You have successfully Done');
+                 window.location.href='hotel.php';
+             }
+         });
+});
+        $('.dis').click(function(){
+  var dss=$(this).parents("tr").attr("id");
+         $.ajax({
+             url:'hotel.php',
+             type:'GET',
+             data:{id:dss,Status:'Disapproved'},
+             error:function(){
+                 alert('Something went wrong');
+             },
+             success:function(){
+                 alert('You have successfully Done');
+                 window.location.href='hotel.php';
+             }
+         });
+});
+    </script>
+
+</body>
+</html>
+
+
+<?php  
+
+$id=0;
+if(isset($_GET['id']))
+{
+    $Status=$_GET['Status'];
+    
+    $iddd=$_GET['id'];
+    if($Status == 'Disapproved'){
+        $qrr="update request_form set approval='Disapproved' where id=$iddd";
+    }else{
+        $qrr="update request_form set approval='Approved' where id=$iddd";
+    }
+        $rsss=mysqli_query($con,$qrr);
+        if(!empty($rsss))
+        {
+          echo "<script> </script>";
+        }
+        else
+        {
+            echo "no";
+        }
+}
+
+?>
